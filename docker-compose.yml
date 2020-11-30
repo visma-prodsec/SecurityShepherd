@@ -13,6 +13,9 @@ services:
         DOCKER_NETWORK_NAME: ${DOCKER_NETWORK_NAME}
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_PASS}
+    user: ${MYSQL_RUNTIME_UID}:${MYSQL_RUNTIME_GID}
+    volumes:
+      - ${MYSQL_VOLUME}:/var/lib/mysql
   mongo:
     image: ${IMAGE_MONGO}
     container_name: ${CONTAINER_MONGO}
@@ -22,6 +25,9 @@ services:
       context: ./docker/mongo
       args:
         MONGODB_VERSION: ${MONGODB_VERSION}
+    user: ${MONGO_RUNTIME_UID}:${MONGO_RUNTIME_GID}
+    volumes:
+      - ${MONGO_VOLUME}:/data/db
   web:
     image: ${IMAGE_TOMCAT}
     container_name: ${CONTAINER_TOMCAT}
@@ -48,3 +54,7 @@ services:
       - $HTTPS_PORT:8443
     depends_on:
       - db
+
+volumes:
+  mongovolume:
+  mysqlvolume:
